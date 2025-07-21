@@ -1,0 +1,260 @@
+<div class="main-container">
+  <!-- Header -->
+  <div class="header">
+    <h1><i class="fas fa-search-location"></i> Crack Detection System</h1>
+    <p>AI-Powered Infrastructure Crack Detection using YOLOv11</p>
+    
+    <!-- Server Status Indicator -->
+    <div class="mt-3">
+      <span class="badge" 
+            [ngClass]="{
+              'bg-success': serverStatus === 'ready',
+              'bg-warning': serverStatus === 'model-not-loaded',
+              'bg-danger': serverStatus === 'error',
+              'bg-secondary': serverStatus === 'checking'
+            }">
+        <i class="fas fa-circle me-1"></i>
+        <span *ngIf="serverStatus === 'ready'">Server Ready</span>
+        <span *ngIf="serverStatus === 'model-not-loaded'">Model Not Loaded</span>
+        <span *ngIf="serverStatus === 'error'">Server Error</span>
+        <span *ngIf="serverStatus === 'checking'">Checking Status...</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible m-3" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible m-3" role="alert">
+    <i class="fas fa-check-circle me-2"></i>
+    {{ successMessage }}
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <h3><i class="fas fa-cloud-upload-alt me-2"></i>Upload Image</h3>
+    
+    <div class="upload-area" 
+         (click)="fileInput.click()"
+         (drop)="onFileDrop($event)"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         [class.dragover]="false">
+      
+      <div class="upload-icon">
+        <i class="fas fa-image"></i>
+      </div>
+      
+      <h4>Drop your image here or click to browse</h4>
+      <p class="text-muted">Supports JPG, PNG, JPEG formats. Max size: 10MB</p>
+      
+      <input #fileInput
+             type="file"
+             class="d-none"
+             accept="image/*"
+             (change)="onFileSelected($event)">
+    </div>
+
+    <!-- Image Preview -->
+    <div *ngIf="imagePreviewUrl" class="mt-4 text-center">
+      <h5>Selected Image:</h5>
+      <img [src]="imagePreviewUrl" alt="Preview" class="image-preview">
+      <div class="mt-3">
+        <p><strong>File:</strong> {{ selectedFile?.name }}</p>
+        <p><strong>Size:</strong> {{ (selectedFile?.size || 0) / 1024 / 1024 | number:'1.2-2' }} MB</p>
+      </div>
+    </div>
+
+    <!-- Upload Progress -->
+    <div *ngIf="isUploading" class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>Uploading...</span>
+        <span>{{ uploadProgress }}%</span>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" 
+             role="progressbar" 
+             [style.width.%]="uploadProgress">
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Button -->
+    <div class="text-center mt-4">
+      <button class="btn btn-primary btn-lg me-3"
+              [disabled]="!selectedFile || isUploading || serverStatus !== 'ready'"
+              (click)="uploadImage()">
+        <span *ngIf="isUploading" class="loading-spinner"></span>
+        <i class="fas fa-upload me-2" *ngIf="!isUploading"></i>
+        {{ isUploading ? 'Uploading...' : 'Upload Image' }}
+      </button>
+
+      <button class="btn btn-secondary btn-lg"
+              [disabled]="!selectedFile"
+              (click)="resetAnalysis()">
+        <i class="fas fa-redo me-2"></i>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Prediction Section -->
+  <div class="prediction-section" *ngIf="uploadedFileId">
+    <h3><i class="fas fa-brain me-2"></i>AI Analysis</h3>
+    
+    <!-- Prediction Progress -->
+    <div *ngIf="isPredicting" class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>Analyzing image for cracks...</span>
+        <span>{{ predictionProgress }}%</span>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" 
+             role="progressbar" 
+             [style.width.%]="predictionProgress">
+        </div>
+      </div>
+    </div>
+
+    <!-- Predict Button -->
+    <div class="text-center mt-4" *ngIf="!predictionResult">
+      <button class="btn btn-success btn-lg"
+              [disabled]="!uploadedFileId || isPredicting || serverStatus !== 'ready'"
+              (click)="predictCracks()">
+        <span *ngIf="isPredicting" class="loading-spinner"></span>
+        <i class="fas fa-search me-2" *ngIf="!isPredicting"></i>
+        {{ isPredicting ? 'Analyzing...' : 'Analyze for Cracks' }}
+      </button>
+    </div>
+
+    <!-- Prediction Results -->
+    <div *ngIf="predictionResult" class="mt-4">
+      <div class="result-card" 
+           [ngClass]="predictionResult.crack_detected ? 'crack-detected' : 'no-crack'">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4>
+            <i class="fas fa-chart-line me-2"></i>
+            Analysis Results
+          </h4>
+          <span class="badge fs-6 px-3 py-2"
+                [ngClass]="{
+                  'bg-danger': getRiskLevel() === 'high-risk',
+                  'bg-warning': getRiskLevel() === 'medium-risk',
+                  'bg-info': getRiskLevel() === 'low-risk',
+                  'bg-success': getRiskLevel() === 'no-risk'
+                }">
+            {{ getRiskLabel() }}
+          </span>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-value" 
+                 [ngClass]="predictionResult.crack_detected ? 'text-danger' : 'text-success'">
+              {{ predictionResult.crack_detected ? 'DETECTED' : 'NOT DETECTED' }}
+            </div>
+            <div class="metric-label">Crack Status</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-value text-primary">
+              {{ predictionResult.crack_count }}
+            </div>
+            <div class="metric-label">Cracks Found</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-value" 
+                 [ngClass]="getRiskLevel()">
+              {{ predictionResult.crack_percentage }}%
+            </div>
+            <div class="metric-label">Severity Level</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-value text-info">
+              {{ (predictionResult.average_confidence * 100) | number:'1.2-2' }}%
+            </div>
+            <div class="metric-label">Confidence Score</div>
+          </div>
+        </div>
+
+        <!-- Result Images -->
+        <div class="row mt-4" *ngIf="resultImageUrl">
+          <div class="col-md-6">
+            <h5>Original Image</h5>
+            <img [src]="imagePreviewUrl" alt="Original" class="image-preview w-100">
+          </div>
+          <div class="col-md-6">
+            <h5>Detection Results</h5>
+            <img [src]="resultImageUrl" alt="Detection Results" class="image-preview w-100">
+          </div>
+        </div>
+
+        <!-- Detailed Predictions -->
+        <div *ngIf="predictionResult.predictions.length > 0" class="prediction-details mt-4">
+          <h5><i class="fas fa-list me-2"></i>Detailed Detections</h5>
+          <div *ngFor="let prediction of predictionResult.predictions; let i = index" 
+               class="prediction-item">
+            <div class="row">
+              <div class="col-md-3">
+                <strong>{{ prediction.class }}</strong>
+              </div>
+              <div class="col-md-3">
+                <span class="badge bg-primary">
+                  {{ (prediction.confidence * 100) | number:'1.2-2' }}% confidence
+                </span>
+              </div>
+              <div class="col-md-6">
+                <small class="text-muted">
+                  Box: [{{ prediction.bbox[0] | number:'1.0-0' }}, 
+                        {{ prediction.bbox[1] | number:'1.0-0' }}, 
+                        {{ prediction.bbox[2] | number:'1.0-0' }}, 
+                        {{ prediction.bbox[3] | number:'1.0-0' }}]
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+          <button class="btn btn-info btn-lg me-3"
+                  [disabled]="isGeneratingReport || isDownloadingReport"
+                  (click)="generateAndDownloadReport()">
+            <span *ngIf="isGeneratingReport || isDownloadingReport" class="loading-spinner"></span>
+            <i class="fas fa-file-pdf me-2" *ngIf="!isGeneratingReport && !isDownloadingReport"></i>
+            <span *ngIf="isGeneratingReport">Generating Report...</span>
+            <span *ngIf="isDownloadingReport">Downloading...</span>
+            <span *ngIf="!isGeneratingReport && !isDownloadingReport">Download Report</span>
+          </button>
+
+          <button class="btn btn-success btn-lg me-3"
+                  (click)="predictCracks()">
+            <i class="fas fa-redo me-2"></i>
+            Re-analyze
+          </button>
+
+          <button class="btn btn-secondary btn-lg"
+                  (click)="resetAnalysis()">
+            <i class="fas fa-plus me-2"></i>
+            New Analysis
+          </button>
+        </div>
+
+        <!-- Analysis Timestamp -->
+        <div class="text-center mt-3">
+          <small class="text-muted">
+            <i class="fas fa-clock me-1"></i>
+            Analysis completed: {{ predictionResult.timestamp | date:'medium' }}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
