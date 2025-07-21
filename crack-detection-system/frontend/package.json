@@ -22,7 +22,11 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0",
     "bootstrap": "^5.3.0",
-    "@ng-bootstrap/ng-bootstrap": "^16.0.0"
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "core-js": "^3.32.0",
+    "es6-promise": "^4.2.8",
+    "whatwg-fetch": "^3.6.2",
+    "classlist.js": "^1.1.20150312"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.0",

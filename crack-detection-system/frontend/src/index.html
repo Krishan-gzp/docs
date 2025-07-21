@@ -5,12 +5,44 @@
   <title>Crack Detection System</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Fallback for older browsers -->
+  <script nomodule>
+    console.warn('Your browser does not support modules. Please update to a modern browser.');
+    document.body.innerHTML = '<div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;"><h1>Browser Not Supported</h1><p>Please update your browser to view this application.</p></div>';
+  </script>
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; font-family: Arial, sans-serif;">
+      <div style="border: 4px solid #667eea; border-top: 4px solid transparent; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+      <p>Loading Crack Detection System...</p>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    </div>
+  </app-root>
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Error handling for failed module loading -->
+  <script>
+    window.addEventListener('error', function(e) {
+      if (e.message && e.message.includes('module')) {
+        console.error('Module loading failed:', e);
+        const appRoot = document.querySelector('app-root');
+        if (appRoot && appRoot.innerHTML.includes('Loading')) {
+          appRoot.innerHTML = '<div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;"><h1>Loading Failed</h1><p>Please refresh the page or try a different browser.</p><button onclick="location.reload()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Refresh Page</button></div>';
+        }
+      }
+    });
+  </script>
 </body>
 </html>

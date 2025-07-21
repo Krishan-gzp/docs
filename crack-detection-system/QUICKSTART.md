@@ -39,8 +39,10 @@ Open: http://localhost:4200
   - 🔴 Red = Server error
 
 ## 🔧 Troubleshooting
+- **Edge blank page**: Clear cache, disable extensions, try InPrivate mode, or use Chrome/Firefox
 - **Can't connect**: Make sure both backend (port 8000) and frontend (port 4200) are running
 - **Model issues**: Verify the model file path and file integrity
 - **Upload fails**: Check image format (JPG/PNG) and size (max 10MB)
+- **Loading errors**: Try refreshing the page or updating your browser
 
 For detailed documentation, see `README.md`

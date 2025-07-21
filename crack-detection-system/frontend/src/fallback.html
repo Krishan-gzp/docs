@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Crack Detection System - Browser Update Required</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .browsers {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .browser {
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s ease;
+        }
+        
+        .browser:hover {
+            transform: translateY(-5px);
+        }
+        
+        .browser-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .chrome { background: #4285f4; color: white; }
+        .firefox { background: #ff9500; color: white; }
+        .edge { background: #0078d4; color: white; }
+        .safari { background: #000; color: white; }
+        
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 1rem 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .retry-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .technical-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .technical-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.25rem 0;
+            color: #666;
+        }
+        
+        .feature-list li:before {
+            content: "✗ ";
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">⚠️</div>
+        <h1>Browser Update Required</h1>
+        
+        <p>
+            The Crack Detection System requires a modern web browser to function properly. 
+            Your current browser doesn't support some required features.
+        </p>
+        
+        <p>
+            Please update your browser or switch to one of the recommended browsers below:
+        </p>
+        
+        <div class="browsers">
+            <a href="https://www.google.com/chrome/" class="browser" target="_blank">
+                <div class="browser-icon chrome">🌐</div>
+                <div>Chrome</div>
+            </a>
+            <a href="https://www.mozilla.org/firefox/" class="browser" target="_blank">
+                <div class="browser-icon firefox">🔥</div>
+                <div>Firefox</div>
+            </a>
+            <a href="https://www.microsoft.com/edge" class="browser" target="_blank">
+                <div class="browser-icon edge">🔷</div>
+                <div>Edge</div>
+            </a>
+            <a href="https://www.apple.com/safari/" class="browser" target="_blank">
+                <div class="browser-icon safari">🧭</div>
+                <div>Safari</div>
+            </a>
+        </div>
+        
+        <button class="retry-btn" onclick="location.reload()">
+            Try Again
+        </button>
+        
+        <div class="technical-info">
+            <h3>Technical Requirements</h3>
+            <p>This application requires browsers that support:</p>
+            <ul class="feature-list">
+                <li>ES2017+ JavaScript features</li>
+                <li>Fetch API</li>
+                <li>Promise objects</li>
+                <li>CSS Grid and Flexbox</li>
+                <li>Modern DOM APIs</li>
+            </ul>
+            
+            <p><strong>Minimum browser versions:</strong></p>
+            <ul class="feature-list">
+                <li>Chrome 58+</li>
+                <li>Firefox 57+</li>
+                <li>Edge 14+</li>
+                <li>Safari 10+</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Check if we can detect some modern features
+        var hasModernFeatures = 
+            window.fetch && 
+            window.Promise && 
+            Array.prototype.includes &&
+            Object.assign;
+            
+        if (hasModernFeatures) {
+            document.querySelector('.technical-info').innerHTML = 
+                '<h3>Partial Support Detected</h3>' +
+                '<p>Your browser has some modern features but may still have compatibility issues. ' +
+                'If you continue to experience problems, please update to the latest version.</p>' +
+                '<button class="retry-btn" onclick="location.href=\'/\'" style="width: 100%;">' +
+                'Continue Anyway</button>';
+        }
+    </script>
+</body>
+</html>
