@@ -96,9 +96,19 @@ export class CrackDetectionService {
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Client Error: ${error.error.message}`;
+    } else if (error.status === 0) {
+      // Network error or CORS issue
+      errorMessage = 'Network Error: Cannot connect to server. Please check if the backend is running on http://localhost:8000';
+    } else if (error.status >= 500) {
+      // Server error
+      errorMessage = `Server Error: ${error.status} - Internal server error`;
+    } else if (error.status >= 400) {
+      // Client error
+      const detail = error.error?.detail || error.error?.message || error.message || 'Bad request';
+      errorMessage = `Request Error: ${error.status} - ${detail}`;
     } else {
-      // Server-side error
-      errorMessage = `Server Error: ${error.status} - ${error.error?.detail || error.message}`;
+      // Other errors
+      errorMessage = `Error: ${error.status} - ${error.error?.detail || error.message || 'Unknown error'}`;
     }
     
     return throwError(() => new Error(errorMessage));

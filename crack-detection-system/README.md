@@ -219,35 +219,45 @@ Edit `src/app/services/crack-detection.service.ts` to customize:
 
 ### Common Issues
 
-#### 1. Model Not Loading
+#### 1. Microsoft Edge Blank Page
+**Problem**: Application appears blank or doesn't load in Microsoft Edge
+**Solution**:
+- **Clear browser cache**: Settings > Privacy > Clear browsing data
+- **Disable extensions**: Try running in InPrivate mode
+- **Check browser version**: Ensure Edge 14+ (preferably latest version)
+- **Enable JavaScript**: Settings > Site permissions > JavaScript > Allow
+- **Reset browser settings**: If issues persist, reset Edge to defaults
+- **Alternative**: Use Chrome or Firefox as backup browsers
+
+#### 2. Model Not Loading
 **Problem**: Yellow status indicator showing "Model Not Loaded"
 **Solution**: 
 - Check if the model file exists at the specified path
 - Verify the model file is not corrupted
 - Ensure sufficient disk space and memory
 
-#### 2. CORS Errors
+#### 3. CORS Errors
 **Problem**: Frontend cannot connect to backend
 **Solution**:
 - Ensure backend is running on `http://localhost:8000`
 - Check CORS settings in `main.py`
 - Verify frontend is running on `http://localhost:4200`
 
-#### 3. File Upload Errors
+#### 4. File Upload Errors
 **Problem**: Images fail to upload
 **Solution**:
 - Check file size (max 10MB)
 - Verify image format (JPG, PNG, JPEG)
 - Ensure backend `uploads` directory exists
 
-#### 4. Prediction Failures
+#### 5. Prediction Failures
 **Problem**: AI analysis fails
 **Solution**:
 - Verify model is loaded correctly
 - Check image is valid and not corrupted
 - Monitor backend logs for detailed error messages
 
-#### 5. Report Generation Issues
+#### 6. Report Generation Issues
 **Problem**: PDF reports fail to generate
 **Solution**:
 - Ensure `reports` directory exists
