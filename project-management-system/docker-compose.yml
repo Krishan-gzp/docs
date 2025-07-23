@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: pm_postgres
+    environment:
+      POSTGRES_DB: project_management
+      POSTGRES_USER: pmuser
+      POSTGRES_PASSWORD: pmpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pm_network
+
+  # ChromaDB Vector Database
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: pm_chromadb
+    ports:
+      - "8001:8000"
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    volumes:
+      - chroma_data:/chroma/chroma
+    networks:
+      - pm_network
+
+  # Python FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pm_backend
+    environment:
+      - DATABASE_URL=postgresql://pmuser:pmpassword@postgres:5432/project_management
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - SECRET_KEY=your-very-secret-key-change-in-production
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - chromadb
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks:
+      - pm_network
+    restart: unless-stopped
+
+  # Node.js Middleware
+  middleware:
+    build:
+      context: ./middleware
+      dockerfile: Dockerfile
+    container_name: pm_middleware
+    environment:
+      - PORT=3000
+      - PYTHON_API_URL=http://backend:8000
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./middleware/uploads:/app/uploads
+    networks:
+      - pm_network
+    restart: unless-stopped
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./frontend/project-management-app
+      dockerfile: Dockerfile
+    container_name: pm_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+      - middleware
+    networks:
+      - pm_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  chroma_data:
+
+networks:
+  pm_network:
+    driver: bridge
