@@ -1,0 +1,40 @@
+{
+  "name": "3d-bim-viewer",
+  "version": "1.0.0",
+  "description": "Advanced 3D BIM model viewer supporting IFC, GLB, GLTF files with explode/assemble features and metadata visualization",
+  "main": "backend/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "nodemon backend/server.js",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "node backend/server.js",
+    "setup": "cd frontend && npm install",
+    "test": "echo \"Tests will be implemented\"",
+    "lint": "echo \"Linting will be implemented\""
+  },
+  "keywords": ["BIM", "3D", "IFC", "GLB", "GLTF", "Three.js", "ThatOpen", "web-ifc", "viewer", "explode", "assemble"],
+  "author": "3D BIM Viewer Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "compression": "^1.7.4",
+    "three": "^0.160.0",
+    "@thatopen/components": "^3.1.0",
+    "@thatopen/components-front": "^3.1.0",
+    "@thatopen/fragments": "^3.1.1",
+    "web-ifc": "^0.0.57"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  }
+}
