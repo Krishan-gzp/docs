@@ -35,56 +35,76 @@ An advanced 3D model viewer supporting IFC, GLB, and GLTF files with powerful ex
 - npm or yarn
 - Modern web browser with WebGL support
 
+### ⚠️ Windows Users - Path Length Issue
+If you get "path too long" errors when extracting:
+1. **Extract to short path:** `C:\bim\3d-bim-viewer`
+2. **Use 7-Zip:** Download from https://www.7-zip.org/
+3. **Run PowerShell script:** `enable-long-paths.ps1` (as Administrator)
+4. **See:** `EXTRACT_SOLUTION.md` for detailed help
+
 ### Installation
 
-1. **Clone the repository**
+#### Method 1: Automated Setup (Windows)
 ```bash
-git clone https://github.com/your-username/3d-bim-viewer.git
-cd 3d-bim-viewer
+# After extracting to C:\bim\3d-bim-viewer
+double-click quick-setup.bat
 ```
 
-2. **Install dependencies**
+#### Method 2: Manual Setup
 ```bash
-# Install root dependencies
+# Navigate to project
+cd C:\bim\3d-bim-viewer
+# or your extraction path
+
+# Install all dependencies
 npm install
 
-# Install frontend dependencies
-npm run setup
-```
-
-3. **Start the development servers**
-```bash
-# Start both backend and frontend
+# Start the application
 npm run dev
 ```
 
-4. **Open in browser**
+#### Method 3: Git Clone (Recommended)
+```bash
+git clone https://github.com/your-username/3d-bim-viewer.git C:\bim\viewer
+cd C:\bim\viewer
+npm install
+npm run dev
+```
+
+### Access the Application
 ```
 Frontend: http://localhost:3000
 Backend API: http://localhost:5000
 ```
 
-## 📁 Project Structure
+## 📁 Project Structure (Optimized for Windows)
 
 ```
-3d-bim-viewer/
-├── backend/                 # Express.js server
-│   ├── routes/             # API routes
-│   ├── middleware/         # Express middleware
-│   └── server.js          # Main server file
-├── frontend/               # React application
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── hooks/         # Custom React hooks
-│   │   ├── utils/         # Utility functions
-│   │   └── types/         # TypeScript definitions
-│   └── public/            # Static assets
-├── public/                # Shared public files
-│   ├── uploads/          # Uploaded model files
-│   ├── models/           # Sample models
-│   └── metadata/         # Model metadata storage
-└── docs/                 # Documentation
+3d-bim-viewer/              # ← Extract here: C:\bim\3d-bim-viewer
+├── backend/               # Express.js server
+│   ├── routes/           # API routes
+│   └── server.js         # Main server file
+├── frontend/             # React application (source only)
+│   ├── src/             # React components
+│   │   ├── components/  # UI components
+│   │   ├── App.tsx      # Main app
+│   │   └── main.tsx     # Entry point
+│   └── vite.config.ts   # Build configuration
+├── public/              # File storage
+│   ├── uploads/         # Uploaded models
+│   └── metadata/        # Model metadata
+├── node_modules/        # Single dependency folder (short paths)
+├── package.json         # All dependencies here
+├── quick-setup.bat      # Windows setup script
+├── enable-long-paths.ps1 # PowerShell script
+└── EXTRACT_SOLUTION.md  # Path length fix guide
 ```
+
+**Key Optimizations:**
+- ✅ Single `node_modules` (no nested paths)
+- ✅ Unified `package.json` (all deps in root)
+- ✅ Short folder names
+- ✅ Windows-specific helper scripts
 
 ## 🛠️ Technology Stack
 
